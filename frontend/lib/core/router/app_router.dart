@@ -10,13 +10,22 @@ import 'package:grocery_app/features/orders/presentation/checkout_screen.dart';
 import 'package:grocery_app/features/orders/presentation/order_status_screen.dart';
 import 'package:grocery_app/features/admin/presentation/admin_dashboard_screen.dart';
 import 'package:grocery_app/core/network/api_client.dart';
-
 import 'package:grocery_app/features/auth/presentation/signup_screen.dart';
+import 'package:grocery_app/features/profile/presentation/profile_screen.dart';
+import 'package:grocery_app/features/notifications/presentation/notifications_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/login',
     routes: [
+      GoRoute(
+        path: '/profile',
+        builder: (context, state) => const ProfileScreen(),
+      ),
+      GoRoute(
+        path: '/notifications',
+        builder: (context, state) => const NotificationsScreen(),
+      ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
