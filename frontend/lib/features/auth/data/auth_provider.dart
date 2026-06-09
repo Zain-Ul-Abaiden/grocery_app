@@ -63,18 +63,52 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  Future<bool> login(String phone, String? name) async {
+  Future<bool> login(String phone, String password) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final response = await _dio.post(
         ApiEndpoints.login,
         data: {
           "phone": phone,
-          "name": name?.trim().isEmpty == true ? null : name,
+          "password": password,
         },
       );
 
       if (response.statusCode == 200) {
+        final data = response.data as Map<String, dynamic>;
+        final token = data["access_token"] as String;
+        final user = UserModel.fromJson(data["user"] as Map<String, dynamic>);
+
+        final storage = _ref.read(secureStorageProvider);
+        await storage.write(key: "auth_token", value: token);
+
+        state = AuthState(user: user, isAuthenticated: true);
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      final message = e.response?.data["detail"] ?? "Server Error. Try again.";
+      state = state.copyWith(isLoading: false, errorMessage: message.toString());
+      return false;
+    } catch (e) {
+      state = state.copyWith(isLoading: false, errorMessage: "An unexpected error occurred.");
+      return false;
+    }
+  }
+
+  Future<bool> signup(String phone, String name, String password) async {
+    state = state.copyWith(isLoading: true, errorMessage: null);
+    try {
+      final response = await _dio.post(
+        "${ApiEndpoints.login.replaceAll('/login', '/signup')}", // quick hack for api endpoints
+        data: {
+          "phone": phone,
+          "name": name,
+          "password": password,
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = response.data as Map<String, dynamic>;
         final token = data["access_token"] as String;
         final user = UserModel.fromJson(data["user"] as Map<String, dynamic>);

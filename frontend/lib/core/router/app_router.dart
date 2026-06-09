@@ -11,6 +11,8 @@ import 'package:grocery_app/features/orders/presentation/order_status_screen.dar
 import 'package:grocery_app/features/admin/presentation/admin_dashboard_screen.dart';
 import 'package:grocery_app/core/network/api_client.dart';
 
+import 'package:grocery_app/features/auth/presentation/signup_screen.dart';
+
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/login',
@@ -18,6 +20,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/signup',
+        builder: (context, state) => const SignupScreen(),
       ),
       GoRoute(
         path: '/',
