@@ -25,11 +25,18 @@ class OrderNotifier extends StateNotifier<AsyncValue<List<OrderModel>>> {
 
   Future<OrderModel?> createOrder(String address, String phone) async {
     try {
+      final cartItems = _ref.read(cartProvider).summary?.items ?? [];
+      final payloadItems = cartItems.map((e) => {
+        "product_id": e.product.id,
+        "quantity": e.quantity,
+      }).toList();
+
       final response = await _dio.post(
         ApiEndpoints.ordersCreate,
         data: {
           "delivery_address": address,
           "contact_phone": phone,
+          "items": payloadItems,
         },
       );
       if (response.statusCode == 201) {
