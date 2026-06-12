@@ -23,6 +23,22 @@ class Settings(BaseSettings):
             url = url.replace("postgres://", "postgresql+asyncpg://", 1)
         elif url.startswith("postgresql://"):
             url = url.replace("postgresql://", "postgresql+asyncpg://", 1)
+
+        # asyncpg does NOT understand libpq query params like `sslmode` / `channel_binding`
+        # (those are psycopg2/libpq syntax). Strip the query string here and let the
+        # engine handle SSL via connect_args instead. See `requires_ssl`.
+        if url.startswith("postgresql+asyncpg://") and "?" in url:
+            url = url.split("?", 1)[0]
         return url
+
+    @property
+    def requires_ssl(self) -> bool:
+        # Managed Postgres (Neon, Supabase, RDS, etc.) requires SSL. Detect from the
+        # original URL's query string or a hosted-provider hostname.
+        raw = self.DATABASE_URL.lower()
+        if "sslmode=require" in raw or "sslmode=verify" in raw:
+            return True
+        # Neon / common managed hosts always need SSL.
+        return any(host in raw for host in ("neon.tech", "supabase", "amazonaws.com", "render.com"))
 
 settings = Settings()

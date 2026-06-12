@@ -1,0 +1,60 @@
+# ===== Secrets / environment =====
+.env
+.env.*
+!.env.example
+*.local
+
+# ===== Python / FastAPI backend =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Uploaded media (keep the folder, ignore contents)
+backend/uploads/*
+!backend/uploads/.gitkeep
+# Local SQLite fallbacks
+*.sqlite3
+*.db
+
+# ===== Node / Next.js admin panel =====
+node_modules/
+.next/
+out/
+build/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# ===== Flutter / Dart app =====
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+.pub-cache/
+.pub/
+**/doc/api/
+*.lock.bak
+
+# ===== Editor / OS =====
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# ===== Claude / local tooling =====
+.claude/
+.mcp.json
+
+# ===== Local MCP server (separate repo, not part of this project) =====
+mcp-appstore/

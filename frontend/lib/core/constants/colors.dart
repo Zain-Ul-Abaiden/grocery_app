@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class AppColors {
   // Primary Brand Colors - Black and Yellow accents
   static const Color primary = Color(0xFF1E1E1E); // Black theme for active icons
+  static const Color primaryDark = Color(0xFF000000); // Deeper black for gradients
   static const Color primaryLight = Color(0xFFFFFBE6); // Creamy yellow header background
   static const Color accent = Color(0xFFFFD54F); // Yellow for buttons/coins
+  static const Color success = Color(0xFF22C55E); // Green for success states
 
   // Background and Surface Colors
   static const Color background = Color(0xFFFFFFFF); // White background for lists

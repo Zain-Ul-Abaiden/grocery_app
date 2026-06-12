@@ -100,7 +100,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
     try {
       final response = await _dio.post(
-        "${ApiEndpoints.login.replaceAll('/login', '/signup')}", // quick hack for api endpoints
+        ApiEndpoints.signup,
         data: {
           "phone": phone,
           "name": name,

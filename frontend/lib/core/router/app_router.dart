@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,7 +8,6 @@ import 'package:grocery_app/features/cart/presentation/cart_screen.dart';
 import 'package:grocery_app/features/orders/presentation/checkout_screen.dart';
 import 'package:grocery_app/features/orders/presentation/order_status_screen.dart';
 import 'package:grocery_app/features/admin/presentation/admin_dashboard_screen.dart';
-import 'package:grocery_app/core/network/api_client.dart';
 import 'package:grocery_app/features/auth/presentation/signup_screen.dart';
 import 'package:grocery_app/features/profile/presentation/profile_screen.dart';
 import 'package:grocery_app/features/notifications/presentation/notifications_screen.dart';

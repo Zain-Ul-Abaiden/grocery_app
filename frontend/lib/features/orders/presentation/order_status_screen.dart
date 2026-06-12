@@ -85,7 +85,6 @@ class OrderStatusScreen extends ConsumerWidget {
         data: (order) {
           final s = order.status.toLowerCase();
           
-          bool pending = true;
           bool confirmed = s == 'confirmed' || s == 'out_for_delivery' || s == 'delivered';
           bool outForDelivery = s == 'out_for_delivery' || s == 'delivered';
           bool delivered = s == 'delivered';

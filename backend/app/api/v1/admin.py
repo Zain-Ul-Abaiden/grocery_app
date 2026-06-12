@@ -10,6 +10,7 @@ from app.models.order import Order, OrderItem
 from app.models.user import User
 from app.models.product import Product
 from app.schemas.order import OrderResponse, OrderStatusUpdateRequest
+from app.schemas.product import ProductResponse
 from app.core.security import get_current_admin
 
 router = APIRouter(prefix="/admin", tags=["Admin Control Panel"])
@@ -50,16 +51,84 @@ async def get_dashboard_stats(
         select(func.count(Product.id)).where(Product.stock == 0)
     )
     out_of_stock_products = out_of_stock_result.scalar() or 0
-    
+
+    # 6. Total products
+    total_products_result = await db.execute(select(func.count(Product.id)))
+    total_products = total_products_result.scalar() or 0
+
+    # 7. Recent orders (latest 5) for the dashboard table
+    recent_result = await db.execute(
+        select(Order).order_by(Order.created_at.desc()).limit(5)
+    )
+    recent_orders = [
+        {
+            "id": o.id,
+            "contact_phone": o.contact_phone,
+            "delivery_address": o.delivery_address,
+            "total_price": o.total_price,
+            "status": o.status,
+            "created_at": o.created_at,
+        }
+        for o in recent_result.scalars().all()
+    ]
+
     return {
         "stats": {
             "total_revenue": float(total_revenue),
             "total_orders": total_orders,
             "pending_orders": pending_orders,
             "total_users": total_users,
-            "out_of_stock_products": out_of_stock_products
-        }
+            "out_of_stock_products": out_of_stock_products,
+            "total_products": total_products,
+        },
+        "recent_orders": recent_orders,
     }
+
+@router.get("/products", response_model=List[ProductResponse])
+async def list_all_products_admin(
+    db: AsyncSession = Depends(get_db),
+    admin: User = Depends(get_current_admin)
+):
+    """
+    List EVERY product including out-of-stock and unavailable ones. Admin only.
+    The public /products endpoint hides unavailable items; admins need to see all.
+    """
+    result = await db.execute(select(Product).order_by(Product.created_at.desc()))
+    return result.scalars().all()
+
+
+@router.get("/customers")
+async def list_customers(
+    db: AsyncSession = Depends(get_db),
+    admin: User = Depends(get_current_admin)
+):
+    """
+    List all registered customers (role == 'user') with their order counts. Admin only.
+    """
+    # Order count per user
+    order_counts = dict(
+        (await db.execute(
+            select(Order.user_id, func.count(Order.id)).group_by(Order.user_id)
+        )).all()
+    )
+
+    result = await db.execute(
+        select(User).where(User.role == "user").order_by(User.created_at.desc())
+    )
+    users = result.scalars().all()
+
+    return [
+        {
+            "id": u.id,
+            "name": u.name,
+            "phone": u.phone,
+            "role": u.role,
+            "created_at": u.created_at,
+            "order_count": order_counts.get(u.id, 0),
+        }
+        for u in users
+    ]
+
 
 @router.get("/orders", response_model=List[OrderResponse])
 async def list_all_orders(

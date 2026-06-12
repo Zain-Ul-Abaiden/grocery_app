@@ -9,6 +9,7 @@ from app.api.router import api_router
 from app.database.connection import engine, Base, AsyncSessionLocal
 from app.models.product import Category, Product
 from app.models.user import User
+from app.core.security import hash_password
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -206,8 +207,8 @@ async def seed_data(db: AsyncSession):
         # 3. Seed Default Admin
         admin_user = User(
             phone="+923001234567",
-            name="Super Admin Zainab",
-            hashed_password="$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW", # admin123
+            name="Super Admin",
+            hashed_password=hash_password("admin123"),  # generated at seed time so it always verifies
             role="admin"
         )
         db.add(admin_user)
