@@ -12,6 +12,7 @@ class User(Base):
     phone = Column(String(20), unique=True, index=True, nullable=False)
     hashed_password = Column(String(255), nullable=False)
     role = Column(String(20), default="user")  # 'user' or 'admin'
+    address = Column(String(500), nullable=True)  # saved default delivery address
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     def to_dict(self):
@@ -20,5 +21,6 @@ class User(Base):
             "name": self.name,
             "phone": self.phone,
             "role": self.role,
+            "address": self.address,
             "created_at": self.created_at
         }

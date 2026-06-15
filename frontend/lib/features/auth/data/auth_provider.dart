@@ -130,6 +130,84 @@ class AuthNotifier extends StateNotifier<AuthState> {
     }
   }
 
+  /// Update the logged-in user's password directly.
+  Future<bool> updatePassword(String newPassword) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.updatePassword,
+        data: {"new_password": newPassword},
+      );
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      state = state.copyWith(
+        errorMessage: e.response?.data["detail"]?.toString() ?? "Failed to update password.",
+      );
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Reset password by phone number (no OTP — simple flow).
+  Future<bool> forgotPassword(String phone, String newPassword) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.forgotPassword,
+        data: {"phone": phone, "new_password": newPassword},
+      );
+      return response.statusCode == 200;
+    } on DioException catch (e) {
+      state = state.copyWith(
+        errorMessage: e.response?.data["detail"]?.toString() ?? "Failed to reset password.",
+      );
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Update the logged-in user's name and/or saved address.
+  Future<bool> updateProfile({String? name, String? address}) async {
+    try {
+      final response = await _dio.post(
+        ApiEndpoints.updateProfile,
+        data: {
+          if (name != null) "name": name,
+          if (address != null) "address": address,
+        },
+      );
+      if (response.statusCode == 200) {
+        final user = UserModel.fromJson(response.data as Map<String, dynamic>);
+        state = state.copyWith(user: user);
+        return true;
+      }
+      return false;
+    } on DioException catch (e) {
+      state = state.copyWith(
+        errorMessage: e.response?.data["detail"]?.toString() ?? "Failed to update profile.",
+      );
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Permanently delete the account and log out.
+  Future<bool> deleteAccount() async {
+    try {
+      final response = await _dio.delete(ApiEndpoints.deleteAccount);
+      if (response.statusCode == 204) {
+        final storage = _ref.read(secureStorageProvider);
+        await storage.delete(key: "auth_token");
+        state = AuthState(isAuthenticated: false);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     final storage = _ref.read(secureStorageProvider);
     await storage.delete(key: "auth_token");

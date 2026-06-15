@@ -46,6 +46,55 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
+  void _showForgotPassword() {
+    final phoneCtrl = TextEditingController();
+    final pwdCtrl = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("Forgot Password", style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: phoneCtrl,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(hintText: "Registered phone number"),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: pwdCtrl,
+              obscureText: true,
+              decoration: const InputDecoration(hintText: "New password (min 6 chars)"),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: Text("Cancel", style: GoogleFonts.outfit(color: AppColors.textSecondary))),
+          ElevatedButton(
+            onPressed: () async {
+              final phone = phoneCtrl.text.trim();
+              final pwd = pwdCtrl.text.trim();
+              if (phone.isEmpty || pwd.length < 6) {
+                ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(content: Text("Enter phone and a 6+ character password", style: GoogleFonts.outfit())));
+                return;
+              }
+              final ok = await ref.read(authProvider.notifier).forgotPassword(phone, pwd);
+              if (ctx.mounted) Navigator.pop(ctx);
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(ok ? "Password reset! Login with your new password." : (ref.read(authProvider).errorMessage ?? "Reset failed"), style: GoogleFonts.outfit()),
+                  backgroundColor: ok ? AppColors.success : Colors.redAccent,
+                ));
+              }
+            },
+            child: Text("Reset", style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
@@ -69,7 +118,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    "Taza Grocery Store",
+                    "Shadab Super Store",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.outfit(
                       fontSize: 32,
@@ -79,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    "Har cheez fresh, har waqt sasti!",
+                    "Click. Cart. Chill.",
                     textAlign: TextAlign.center,
                     style: GoogleFonts.outfit(
                       fontSize: 16,
@@ -138,13 +187,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 36),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: _showForgotPassword,
+                      child: Text("Forgot Password?", style: GoogleFonts.outfit(color: AppColors.primary, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
                   // Submit Button
                   ElevatedButton(
                     onPressed: authState.isLoading ? null : _submit,
                     child: authState.isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: AppColors.onPrimary)
                         : Text("Login"),
                   ),
                   const SizedBox(height: 24),
@@ -175,7 +232,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            "Khaas Offer: Cash on Delivery bilkul muft aur koi OTP ki jhanjhat nahi!",
+                            "Special offer: Cash on Delivery available — no OTP hassle!",
                             style: GoogleFonts.outfit(
                               fontSize: 12,
                               color: AppColors.primaryDark,

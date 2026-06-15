@@ -2,19 +2,26 @@ class ApiEndpoints {
   // ── Host configuration ────────────────────────────────────────────────
   // Set this to the PC's current local Wi-Fi IP so a physical phone on the
   // same network can reach the backend. Find it with `ipconfig` (IPv4 Address).
-  static const String _host = "192.168.1.37";
+  static const String _host = "192.168.1.12";
 
-  // Base URL used by physical devices / web / desktop.
-  static const String baseUrl = "http://$_host:8000/api/v1";
+  // Base URL used by web / desktop running on the SAME machine as the backend.
+  // localhost is the most reliable here (loopback — no firewall/network needed).
+  static const String baseUrl = "http://localhost:8000/api/v1";
 
-  // Android emulator reaches the host machine via 10.0.2.2. If you test on a
-  // physical Android phone instead, change this to the same value as [baseUrl].
-  static const String emulatorBaseUrl = "http://$_host:8000/api/v1";
+  // Used by physical Android phones. With `adb reverse tcp:8000 tcp:8000` over
+  // USB, localhost on the phone tunnels to the PC's backend — works regardless
+  // of Wi-Fi (bypasses guest-network client isolation). For pure Wi-Fi testing
+  // instead, change this to "http://$_host:8000/api/v1".
+  static const String emulatorBaseUrl = "http://localhost:8000/api/v1";
 
   // Auth endpoints
   static const String login = "/auth/login";
   static const String signup = "/auth/signup";
   static const String me = "/auth/me";
+  static const String updatePassword = "/auth/update-password";
+  static const String forgotPassword = "/auth/forgot-password";
+  static const String updateProfile = "/auth/update-profile";
+  static const String deleteAccount = "/auth/me";
 
   // Catalog endpoints
   static const String categories = "/categories";

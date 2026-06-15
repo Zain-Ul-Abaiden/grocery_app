@@ -71,7 +71,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Pata aur Payment (Checkout)",
+          "Checkout",
           style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
         ),
         centerTitle: true,
@@ -104,15 +104,15 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Bachaaye gaye items:", style: GoogleFonts.outfit(color: AppColors.textSecondary)),
-                              Text("${cartState.summary!.items.length} Packets", style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                              Text("Items:", style: GoogleFonts.outfit(color: AppColors.textSecondary)),
+                              Text("${cartState.summary!.items.length} items", style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
                             ],
                           ),
                           const SizedBox(height: 6),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Kul Qeemat (Total):", style: GoogleFonts.outfit(color: AppColors.textSecondary)),
+                              Text("Total:", style: GoogleFonts.outfit(color: AppColors.textSecondary)),
                               Text("Rs. ${cartState.summary!.totalPrice.round()}", style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 16)),
                             ],
                           ),
@@ -124,7 +124,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                   // Delivery Address Form
                   Text(
-                    "Delivery Address (Ghar ka pata)",
+                    "Delivery Address",
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: 8),
@@ -140,7 +140,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
-                        return "Pata likhna zaroori hai (Address is required)";
+                        return "Address is required";
                       }
                       return null;
                     },
@@ -149,7 +149,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
                   // Phone Number for Contact
                   Text(
-                    "Contact Phone (Rabte ke liye number)",
+                    "Contact Phone",
                     style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                   ),
                   const SizedBox(height: 8),
@@ -162,7 +162,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                     ),
                     validator: (v) {
                       if (v == null || v.trim().isEmpty) {
-                        return "Rabte ka number zaroori hai";
+                        return "Phone number is required";
                       }
                       return null;
                     },
@@ -199,7 +199,7 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                                 ),
                               ),
                               Text(
-                                "Pehle saman check karein, phir cash ada karein!",
+                                "Check your order first, then pay cash on delivery!",
                                 style: GoogleFonts.outfit(
                                   color: AppColors.textSecondary,
                                   fontSize: 12,
@@ -218,8 +218,8 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
                   ElevatedButton(
                     onPressed: _isSubmitting ? null : _confirmCheckout,
                     child: _isSubmitting
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text("Order Confirm Karein (Rs. ${cartState.summary!.totalPrice.round()})"),
+                        ? const CircularProgressIndicator(color: AppColors.onPrimary)
+                        : Text("Place Order (Rs. ${cartState.summary!.totalPrice.round()})"),
                   ),
                 ],
               ),

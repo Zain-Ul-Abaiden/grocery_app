@@ -16,6 +16,7 @@ class UserResponse(BaseModel):
     phone: str
     name: Optional[str]
     role: str
+    address: Optional[str] = None
     created_at: datetime
 
     class Config:

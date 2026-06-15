@@ -50,7 +50,7 @@ export default function LoginPage() {
             <ShoppingBag className="text-gray-900 w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">
-            Taza<span className="text-yellow-400">Admin</span>
+Shadab Super <span className="text-yellow-400">Store</span>
           </h1>
           <p className="text-gray-400 mt-1 text-sm">Store management dashboard</p>
         </div>

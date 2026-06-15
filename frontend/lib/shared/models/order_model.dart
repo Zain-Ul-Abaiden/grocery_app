@@ -70,19 +70,19 @@ class OrderModel {
     );
   }
 
-  // Urdu status helper for customer understanding
-  String get statusInUrdu {
+  // Human-friendly status label for the customer.
+  String get statusLabel {
     switch (status.toLowerCase()) {
       case 'pending':
-        return 'Pahunch Rahi Hai (Pending)';
+        return 'Pending';
       case 'confirmed':
-        return 'Taye Shuda (Confirmed)';
+        return 'Confirmed';
       case 'out_for_delivery':
-        return 'Raste Mein Hai (Out for Delivery)';
+        return 'Out for Delivery';
       case 'delivered':
-        return 'Pahunch Chuka (Delivered)';
+        return 'Delivered';
       case 'cancelled':
-        return 'Mansookh Shuda (Cancelled)';
+        return 'Cancelled';
       default:
         return status;
     }

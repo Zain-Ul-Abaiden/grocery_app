@@ -176,7 +176,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   ElevatedButton(
                     onPressed: authState.isLoading ? null : _submit,
                     child: authState.isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: AppColors.onPrimary)
                         : Text("Sign Up"),
                   ),
                   const SizedBox(height: 48),

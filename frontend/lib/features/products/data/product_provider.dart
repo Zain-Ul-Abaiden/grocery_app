@@ -111,3 +111,17 @@ final singleProductProvider = FutureProvider.family<ProductModel, String>((ref, 
   final response = await dio.get("${ApiEndpoints.products}/$productId");
   return ProductModel.fromJson(response.data as Map<String, dynamic>);
 });
+
+// Loader for a single category's products (with optional search). Returns a
+// callable so the category screen can re-fetch on search without touching the
+// global products state used by Home.
+final categoryProductsLoader = Provider((ref) {
+  final dio = ref.watch(apiClientProvider);
+  return (int categoryId, String search) async {
+    final params = <String, dynamic>{'category_id': categoryId};
+    if (search.trim().isNotEmpty) params['search'] = search.trim();
+    final response = await dio.get(ApiEndpoints.products, queryParameters: params);
+    final list = response.data as List<dynamic>;
+    return list.map((e) => ProductModel.fromJson(e as Map<String, dynamic>)).toList();
+  };
+});

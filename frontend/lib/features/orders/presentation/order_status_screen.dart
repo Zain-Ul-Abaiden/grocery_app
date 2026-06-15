@@ -68,7 +68,7 @@ class OrderStatusScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Order Tracking (Taza safar)",
+          "Order Tracking",
           style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
         ),
         centerTitle: true,
@@ -76,7 +76,8 @@ class OrderStatusScreen extends ConsumerWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.close_rounded, color: AppColors.textPrimary),
-          onPressed: () => context.go('/'),
+          // Go back one step (to the order list it came from); fall back to home.
+          onPressed: () => context.canPop() ? context.pop() : context.go('/'),
         ),
       ),
       body: orderAsync.when(
@@ -84,10 +85,18 @@ class OrderStatusScreen extends ConsumerWidget {
         error: (err, stack) => const Center(child: Text("Order details could not be found.")),
         data: (order) {
           final s = order.status.toLowerCase();
-          
+
+          final bool isCancelled = s == 'cancelled';
+          final bool isDelivered = s == 'delivered';
           bool confirmed = s == 'confirmed' || s == 'out_for_delivery' || s == 'delivered';
           bool outForDelivery = s == 'out_for_delivery' || s == 'delivered';
           bool delivered = s == 'delivered';
+
+          final Color stampColor = isDelivered
+              ? AppColors.success
+              : isCancelled
+                  ? Colors.redAccent
+                  : AppColors.warning;
 
           return RefreshIndicator(
             onRefresh: () async {
@@ -96,15 +105,45 @@ class OrderStatusScreen extends ConsumerWidget {
             child: ListView(
               padding: const EdgeInsets.all(24.0),
               children: [
-                // SUCCESS GREETING
+                // STATUS STAMP
                 Center(
                   child: Column(
                     children: [
-                      const Icon(Icons.check_circle_outline_rounded, size: 64, color: AppColors.primary),
-                      const SizedBox(height: 12),
+                      Transform.rotate(
+                        angle: -0.15,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: stampColor, width: 3),
+                            borderRadius: BorderRadius.circular(10),
+                            color: stampColor.withOpacity(0.08),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                isDelivered ? Icons.verified_rounded : isCancelled ? Icons.cancel_rounded : Icons.timelapse_rounded,
+                                color: stampColor,
+                                size: 22,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                order.statusLabel.toUpperCase(),
+                                style: GoogleFonts.outfit(fontWeight: FontWeight.w900, fontSize: 20, color: stampColor, letterSpacing: 1.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
                       Text(
-                        "Shukriya! Order Receive Ho Gaya",
-                        style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 18, color: AppColors.textPrimary),
+                        isCancelled
+                            ? "This order was cancelled"
+                            : isDelivered
+                                ? "Your order has been delivered"
+                                : "Thank You! Your order is on its way",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
                       ),
                       const SizedBox(height: 4),
                       Text(
@@ -116,28 +155,50 @@ class OrderStatusScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 36),
 
-                // TRACKING PIPELINE
+                // TRACKING PIPELINE (hidden for cancelled orders)
+                if (isCancelled)
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.redAccent.withOpacity(0.4)),
+                    ),
+                    child: Row(
+                      children: [
+                        const Icon(Icons.info_outline_rounded, color: Colors.redAccent),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            "This order has been cancelled. If you have any questions, please contact the store.",
+                            style: GoogleFonts.outfit(fontSize: 13, color: AppColors.textSecondary),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                else
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
                     children: [
                       _buildStep(
                         "Order Received",
-                        "Apka order system mein dakhil ho gaya hai.",
+                        "Your order has been placed.",
                         confirmed,
                         s == 'pending',
                         Icons.receipt_long_rounded,
                       ),
                       _buildStep(
                         "Store Confirm & Packing",
-                        "Dukandar saman check karke pack kar raha hai.",
+                        "The store is packing your order.",
                         outForDelivery,
                         s == 'confirmed',
                         Icons.inventory_2_outlined,
                       ),
                       _buildStep(
                         "Out for Delivery",
-                        "Humar rider apke ghar ke liye nikal chuka hai.",
+                        "Your rider is on the way.",
                         delivered,
                         s == 'out_for_delivery',
                         Icons.delivery_dining_rounded,
@@ -169,7 +230,7 @@ class OrderStatusScreen extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  "Saman safely delivered aur transaction complete!",
+                                  "Delivered safely and order complete!",
                                   style: GoogleFonts.outfit(fontSize: 12, color: AppColors.textLight),
                                 ),
                               ],
@@ -230,16 +291,11 @@ class OrderStatusScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Pate par Cash ada karein:", style: GoogleFonts.outfit(fontSize: 14, color: AppColors.textSecondary)),
+                    Text("Pay cash on delivery:", style: GoogleFonts.outfit(fontSize: 14, color: AppColors.textSecondary)),
                     Text("Rs. ${order.totalPrice.round()}", style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
                   ],
                 ),
-                const SizedBox(height: 36),
-
-                ElevatedButton(
-                  onPressed: () => context.go('/'),
-                  child: const Text("Home Screen par Wapis Jayein"),
-                ),
+                const SizedBox(height: 24),
               ],
             ),
           );

@@ -439,7 +439,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                             child: Padding(
                               padding: const EdgeInsets.all(40.0),
                               child: Text(
-                                "Koi active orders nahi hain.",
+                                "No active orders.",
                                 style: GoogleFonts.outfit(color: AppColors.textSecondary),
                               ),
                             ),
@@ -601,7 +601,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                             const Icon(Icons.create_new_folder_rounded, color: AppColors.primary, size: 48),
                             const SizedBox(height: 12),
                             Text(
-                              "Nayi Category Shamil Karein (Add Category)",
+                              "Add Category",
                               style: GoogleFonts.outfit(
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.primaryDark,
@@ -635,7 +635,7 @@ class AdminDashboardScreen extends ConsumerWidget {
                             const Icon(Icons.add_box_rounded, color: AppColors.warning, size: 48),
                             const SizedBox(height: 12),
                             Text(
-                              "Naya Item/Product Shamil Karein (Add Product)",
+                              "Add Product",
                               style: GoogleFonts.outfit(
                                 fontWeight: FontWeight.bold,
                                 color: const Color(0xFFB35900),

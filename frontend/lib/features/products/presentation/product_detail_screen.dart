@@ -177,7 +177,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        product.description ?? "Taza brand organic and pure grocery product selected directly for best quality.",
+                        product.description ?? "Fresh, quality grocery product selected directly for the best value.",
                         style: GoogleFonts.outfit(
                           fontSize: 14,
                           color: AppColors.textSecondary,
@@ -236,7 +236,7 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text(
-                                        "$_quantity x ${product.name} bag mein shamil ho gaya!",
+                                        "$_quantity x ${product.name} added to cart!",
                                         style: GoogleFonts.outfit(),
                                       ),
                                       backgroundColor: AppColors.primary,
@@ -246,8 +246,8 @@ class _ProductDetailScreenState extends ConsumerState<ProductDetailScreen> {
                                 }
                               },
                         child: product.isOutOfStock
-                            ? const Text("Out of Stock (Dastiyab Nahi)")
-                            : Text("Basket Mein Shamil Karein (Rs. ${(product.activePrice * _quantity).round()})"),
+                            ? const Text("Out of Stock")
+                            : Text("Add to Cart (Rs. ${(product.activePrice * _quantity).round()})"),
                       ),
                     ],
                   ),

@@ -6,8 +6,8 @@ import AppShell from "@/components/AppShell";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Taza Grocery Admin",
-  description: "Premium Admin panel for Taza Grocery App",
+  title: "Shadab Super Store — Admin",
+  description: "Admin panel for Shadab Super Store",
 };
 
 export default function RootLayout({

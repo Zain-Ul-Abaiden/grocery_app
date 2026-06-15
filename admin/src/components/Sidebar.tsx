@@ -29,7 +29,7 @@ export default function Sidebar() {
         <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-400 to-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/30">
           <ShoppingBag className="text-gray-900 w-6 h-6" />
         </div>
-        <h1 className="text-2xl font-bold ml-4 tracking-tight">Taza<span className="text-yellow-400">Admin</span></h1>
+        <h1 className="text-lg font-bold ml-3 tracking-tight leading-tight">Shadab Super <span className="text-yellow-400">Store</span></h1>
       </div>
       
       <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">

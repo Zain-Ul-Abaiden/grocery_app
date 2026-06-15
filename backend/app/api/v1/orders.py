@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.future import select
+from sqlalchemy import delete
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 from typing import List
@@ -82,8 +83,10 @@ async def create_order(
     
     db.add(order)
 
-        
-    # Commit transaction (handles all stock reductions, cart clears, and order creations atomically)
+    # Clear the user's cart now that these items have been ordered
+    await db.execute(delete(Cart).where(Cart.user_id == current_user.id))
+
+    # Commit transaction (handles stock reductions, cart clear, and order creation atomically)
     await db.commit()
     
     # Reload order to fully populate relationships

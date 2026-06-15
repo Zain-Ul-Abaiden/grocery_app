@@ -58,7 +58,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       <main className="flex-1 flex flex-col h-screen overflow-hidden bg-gray-50/50">
         <header className="h-20 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-8 sticky top-0 z-10 shadow-sm">
           <div className="flex items-center md:hidden">
-            <h1 className="text-xl font-bold text-gray-800">Taza Admin</h1>
+            <h1 className="text-xl font-bold text-gray-800">Shadab Super Store</h1>
           </div>
           <div className="hidden md:flex">
             <p className="text-sm text-gray-500 font-medium">
