@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Brand Colors - golden / amber (Shadab Super Store)
-  static const Color primary = Color(0xFFE0A82E); // golden amber
-  static const Color primaryDark = Color(0xFFB8821C); // Deeper amber for gradients
-  static const Color primaryLight = Color(0xFFFFF6E0); // Creamy amber tint for surfaces
-  static const Color accent = Color(0xFFFFD54F); // Lighter yellow accent
-  static const Color onPrimary = Color(0xFF1E1E1E); // Dark text/icons on gold surfaces
+  // Primary Brand Colors - green (Shadab Super Store)
+  static const Color primary = Color(0xFF2F6B1A); // Deep green: buttons, fills, accent text/icons on white
+  static const Color primaryDark = Color(0xFF143F17); // Darkest green: gradient dark-end, deep text, dark sections
+  static const Color primaryMid = Color(0xFF8ABF2C); // Mid green: optional decorative accents
+  static const Color primaryLight = Color(0xFFCDEE77); // Light lime tint for light section surfaces (paired with dark text)
+  static const Color accent = Color(0xFFB4EB39); // Bright lime accent for highlights/badges
+  static const Color onPrimary = Color(0xFFFFFFFF); // White text/icons on green fills
   static const Color success = Color(0xFF22C55E); // Green for success states
 
   // Background and Surface Colors

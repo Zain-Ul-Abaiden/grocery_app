@@ -71,7 +71,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
             <div className="flex items-center pl-6 border-l border-gray-200">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-gray-700 to-gray-900 flex items-center justify-center text-white font-bold shadow-md">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#2F6B1A] to-[#143F17] flex items-center justify-center text-white font-bold shadow-md">
                 {initial}
               </div>
               <div className="ml-3 hidden lg:block">

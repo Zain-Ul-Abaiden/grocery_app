@@ -99,7 +99,7 @@ export default function OrdersPage() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="border border-gray-300 rounded-lg p-2 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 outline-none"
+            className="border border-gray-300 rounded-lg p-2 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] outline-none"
           >
             <option value="">All statuses</option>
             {STATUSES.map((s) => (
@@ -159,7 +159,7 @@ export default function OrdersPage() {
                         onClick={() =>
                           setExpanded(expanded === order.id ? null : order.id)
                         }
-                        className="flex items-center gap-1.5 hover:text-yellow-600"
+                        className="flex items-center gap-1.5 hover:text-[#2F6B1A]"
                       >
                         <ChevronDown
                           className={`w-4 h-4 transition-transform ${expanded === order.id ? "rotate-180" : ""}`}
@@ -199,7 +199,7 @@ export default function OrdersPage() {
                             changeStatus(order.id, e.target.value)
                           }
                           disabled={updatingId === order.id}
-                          className="border border-gray-300 rounded-lg p-1.5 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 outline-none"
+                          className="border border-gray-300 rounded-lg p-1.5 text-sm text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] outline-none"
                         >
                           {STATUSES.map((s) => (
                             <option key={s} value={s}>

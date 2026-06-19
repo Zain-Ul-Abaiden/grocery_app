@@ -130,7 +130,7 @@ export default function ProductsPage() {
   };
 
   const inputCls =
-    "w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 outline-none";
+    "w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] outline-none";
 
   return (
     <div>
@@ -266,7 +266,7 @@ export default function ProductsPage() {
               onChange={(e) =>
                 setForm({ ...form, is_available: e.target.checked })
               }
-              className="w-4 h-4 accent-yellow-500"
+              className="w-4 h-4 accent-[#2F6B1A]"
             />
             Available for sale
           </label>
@@ -274,7 +274,7 @@ export default function ProductsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-60 text-gray-900 px-8 py-2.5 rounded-lg font-bold shadow-sm transition-colors flex items-center gap-2"
+              className="bg-[#2F6B1A] hover:bg-[#143F17] disabled:opacity-60 text-white px-8 py-2.5 rounded-lg font-bold shadow-sm transition-colors flex items-center gap-2"
             >
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
               {editingId ? "Update Product" : "Save Product"}

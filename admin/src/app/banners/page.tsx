@@ -84,7 +84,7 @@ export default function BannersPage() {
             type="text"
             value={imageUrl}
             onChange={(e) => setImageUrl(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all shadow-sm"
+            className="w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] outline-none transition-all shadow-sm"
             placeholder="https://..."
           />
         </div>

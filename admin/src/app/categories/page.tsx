@@ -63,7 +63,7 @@ export default function CategoriesPage() {
   };
 
   const inputCls =
-    "w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 outline-none transition-all shadow-sm";
+    "w-full border border-gray-300 rounded-lg p-2.5 text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] outline-none transition-all shadow-sm";
 
   return (
     <div>
@@ -122,7 +122,7 @@ export default function CategoriesPage() {
           <button
             type="submit"
             disabled={saving}
-            className="bg-yellow-400 hover:bg-yellow-500 disabled:opacity-60 text-gray-900 py-2.5 rounded-lg font-bold w-32 flex items-center justify-center gap-2"
+            className="bg-[#2F6B1A] hover:bg-[#143F17] disabled:opacity-60 text-white py-2.5 rounded-lg font-bold w-32 flex items-center justify-center gap-2"
           >
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             Save

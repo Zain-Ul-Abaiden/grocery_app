@@ -207,7 +207,7 @@ async def seed_data(db: AsyncSession):
         # 3. Seed Default Admin
         admin_user = User(
             phone="+923001234567",
-            name="Super Admin",
+            name="Zain",
             hashed_password=hash_password("admin123"),  # generated at seed time so it always verifies
             role="admin"
         )

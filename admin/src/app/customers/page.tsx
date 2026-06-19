@@ -72,7 +72,7 @@ export default function CustomersPage() {
                 <tr key={c.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 flex items-center justify-center text-gray-900 font-bold text-sm">
+                      <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#8ABF2C] to-[#2F6B1A] flex items-center justify-center text-white font-bold text-sm">
                         {(c.name || "U").charAt(0).toUpperCase()}
                       </div>
                       <span className="text-sm font-medium text-gray-900">

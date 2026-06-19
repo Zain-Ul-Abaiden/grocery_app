@@ -76,7 +76,7 @@ export default function Dashboard() {
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">
             Dashboard Overview
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-gray-700 mt-1 font-medium">
             Here is what is happening in your store today.
           </p>
         </div>
@@ -97,7 +97,6 @@ export default function Dashboard() {
               label="Total Orders"
               value={stats!.total_orders.toString()}
               icon={<ShoppingCart className="w-5 h-5" />}
-              bgIcon={<ShoppingCart className="w-16 h-16 text-blue-600" />}
               accent="bg-blue-50 text-blue-600"
               footer={`${stats!.pending_orders} pending`}
             />
@@ -105,19 +104,15 @@ export default function Dashboard() {
               label="Pending Orders"
               value={stats!.pending_orders.toString()}
               icon={<Clock className="w-5 h-5" />}
-              bgIcon={<Clock className="w-16 h-16 text-yellow-600" />}
               accent="bg-yellow-50 text-yellow-600"
               footer="Needs attention"
             />
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-6 rounded-2xl shadow-xl shadow-gray-900/20 relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-10">
-                <DollarSign className="w-16 h-16 text-white" />
-              </div>
+            <div className="bg-gradient-to-br from-[#143F17] to-[#2F6B1A] p-6 rounded-2xl shadow-xl shadow-[#143F17]/30 relative overflow-hidden group">
               <div className="flex items-center justify-between mb-4 relative z-10">
-                <h3 className="text-gray-400 text-sm font-semibold uppercase tracking-wider">
+                <h3 className="text-white/70 text-sm font-semibold uppercase tracking-wider">
                   Total Revenue
                 </h3>
-                <span className="bg-white/10 text-white p-2 rounded-lg">
+                <span className="bg-white/15 text-white p-2 rounded-lg">
                   <DollarSign className="w-5 h-5" />
                 </span>
               </div>
@@ -125,14 +120,13 @@ export default function Dashboard() {
                 Rs. {stats!.total_revenue.toLocaleString()}
               </p>
               <div className="mt-4 flex items-center text-sm relative z-10">
-                <span className="text-gray-400">From delivered orders</span>
+                <span className="text-white/70">From delivered orders</span>
               </div>
             </div>
             <StatCard
               label="Total Products"
               value={stats!.total_products.toString()}
               icon={<Package className="w-5 h-5" />}
-              bgIcon={<Package className="w-16 h-16 text-purple-600" />}
               accent="bg-purple-50 text-purple-600"
               footer={`${stats!.out_of_stock_products} out of stock`}
             />
@@ -233,31 +227,26 @@ function StatCard({
   label,
   value,
   icon,
-  bgIcon,
   accent,
   footer,
 }: {
   label: string;
   value: string;
   icon: React.ReactNode;
-  bgIcon: React.ReactNode;
   accent: string;
   footer: string;
 }) {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 relative overflow-hidden group hover:shadow-md transition-shadow">
-      <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-        {bgIcon}
-      </div>
-      <div className="flex items-center justify-between mb-4 relative z-10">
+    <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+      <div className="flex items-center justify-between mb-4">
         <h3 className="text-gray-500 text-sm font-semibold uppercase tracking-wider">
           {label}
         </h3>
-        <span className={`${accent} p-2 rounded-lg`}>{icon}</span>
+        <span className={`${accent} p-2.5 rounded-xl`}>{icon}</span>
       </div>
-      <p className="text-4xl font-bold text-gray-900 relative z-10">{value}</p>
-      <div className="mt-4 flex items-center text-sm relative z-10">
-        <span className="text-gray-400">{footer}</span>
+      <p className="text-4xl font-bold text-gray-900">{value}</p>
+      <div className="mt-4 flex items-center text-sm">
+        <span className="text-gray-500 font-medium">{footer}</span>
       </div>
     </div>
   );

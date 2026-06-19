@@ -43,16 +43,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#0F172A] via-[#1e293b] to-[#0F172A] p-4">
+    <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-[#143F17] via-[#2F6B1A] to-[#143F17] p-4">
       <div className="w-full max-w-md">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-yellow-400 to-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/30 mb-4">
-            <ShoppingBag className="text-gray-900 w-8 h-8" />
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#8ABF2C] to-[#2F6B1A] flex items-center justify-center shadow-lg shadow-[#2F6B1A]/40 mb-4">
+            <ShoppingBag className="text-white w-8 h-8" />
           </div>
           <h1 className="text-3xl font-bold text-white tracking-tight">
-Shadab Super <span className="text-yellow-400">Store</span>
+Shadab Super <span className="text-[#B4EB39]">Store</span>
           </h1>
-          <p className="text-gray-400 mt-1 text-sm">Store management dashboard</p>
+          <p className="text-white/60 mt-1 text-sm">Store management dashboard</p>
         </div>
 
         <form
@@ -68,7 +68,7 @@ Shadab Super <span className="text-yellow-400">Store</span>
               type="text"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+              className="w-full border border-gray-300 rounded-xl p-3 text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] focus:border-[#2F6B1A] outline-none transition-all"
               placeholder="+923001234567"
             />
           </div>
@@ -81,7 +81,7 @@ Shadab Super <span className="text-yellow-400">Store</span>
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-300 rounded-xl p-3 text-gray-900 bg-white focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 outline-none transition-all"
+              className="w-full border border-gray-300 rounded-xl p-3 text-gray-900 bg-white focus:ring-2 focus:ring-[#2F6B1A] focus:border-[#2F6B1A] outline-none transition-all"
               placeholder="••••••••"
             />
           </div>
@@ -95,7 +95,7 @@ Shadab Super <span className="text-yellow-400">Store</span>
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-yellow-400 hover:bg-yellow-500 disabled:opacity-60 text-gray-900 py-3 rounded-xl font-bold shadow-sm transition-colors flex items-center justify-center gap-2"
+            className="w-full bg-[#2F6B1A] hover:bg-[#143F17] disabled:opacity-60 text-white py-3 rounded-xl font-bold shadow-sm transition-colors flex items-center justify-center gap-2"
           >
             {loading ? (
               <Loader2 className="w-5 h-5 animate-spin" />

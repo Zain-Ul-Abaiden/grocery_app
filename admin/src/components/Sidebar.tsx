@@ -24,16 +24,16 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-72 bg-[#0F172A] text-white flex-col hidden md:flex shadow-2xl relative">
-      <div className="h-20 flex items-center px-8 border-b border-gray-800">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-yellow-400 to-yellow-500 flex items-center justify-center shadow-lg shadow-yellow-500/30">
-          <ShoppingBag className="text-gray-900 w-6 h-6" />
+    <aside className="w-72 bg-[#143F17] text-white flex-col hidden md:flex shadow-2xl relative">
+      <div className="h-20 flex items-center px-8 border-b border-white/10">
+        <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#8ABF2C] to-[#2F6B1A] flex items-center justify-center shadow-lg shadow-[#2F6B1A]/40">
+          <ShoppingBag className="text-white w-6 h-6" />
         </div>
-        <h1 className="text-lg font-bold ml-3 tracking-tight leading-tight">Shadab Super <span className="text-yellow-400">Store</span></h1>
+        <h1 className="text-lg font-bold ml-3 tracking-tight leading-tight">Shadab Super <span className="text-[#B4EB39]">Store</span></h1>
       </div>
       
       <nav className="flex-1 px-4 py-8 space-y-2 overflow-y-auto">
-        <p className="px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Management</p>
+        <p className="px-4 text-xs font-semibold text-white/40 uppercase tracking-wider mb-4">Management</p>
         
         {navItems.map((item) => {
           const isActive = pathname === item.href;
@@ -48,14 +48,14 @@ export default function Sidebar() {
                   : "hover:bg-white/5 text-gray-400 hover:text-white"
               }`}
             >
-              <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-yellow-400" : ""}`} />
+              <Icon className={`w-5 h-5 mr-3 ${isActive ? "text-[#B4EB39]" : ""}`} />
               {item.name}
             </Link>
           );
         })}
       </nav>
       
-      <div className="p-6 border-t border-gray-800">
+      <div className="p-6 border-t border-white/10">
         <button
           onClick={handleLogout}
           className="flex items-center w-full px-4 py-3 rounded-xl hover:bg-red-500/10 text-gray-400 hover:text-red-400 font-medium transition-all duration-200"
