@@ -7,6 +7,11 @@ import 'package:grocery_app/features/auth/data/auth_provider.dart';
 import 'package:grocery_app/features/products/data/product_provider.dart';
 import 'package:grocery_app/features/cart/data/cart_provider.dart';
 import 'package:grocery_app/features/main/presentation/main_scaffold.dart';
+import 'package:grocery_app/features/products/presentation/widgets/banner_carousel.dart';
+import 'package:grocery_app/features/products/presentation/widgets/category_rail.dart';
+import 'package:grocery_app/features/products/presentation/widgets/product_rail.dart';
+import 'package:grocery_app/features/products/presentation/widgets/section_header.dart';
+import 'package:grocery_app/features/products/presentation/widgets/cart_quantity_control.dart';
 
 class HomeTab extends ConsumerWidget {
   const HomeTab({super.key});
@@ -14,8 +19,7 @@ class HomeTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final productsState = ref.watch(productsProvider);
-    final categoriesAsync = ref.watch(categoriesProvider);
+    final homeAsync = ref.watch(homeProvider);
     final cartState = ref.watch(cartProvider);
     final currentUser = authState.user;
 
@@ -48,135 +52,99 @@ class HomeTab extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // Search bar
+          // Tappable search bar -> dedicated search screen
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: TextField(
-              onChanged: (val) => ref.read(productsProvider.notifier).searchProducts(val),
-              decoration: InputDecoration(
-                hintText: "Search Item...",
-                prefixIcon: const Icon(Icons.search_rounded, color: AppColors.textSecondary),
-                suffixIcon: productsState.searchQuery.isNotEmpty
-                    ? IconButton(
-                        icon: const Icon(Icons.clear_rounded, color: AppColors.textSecondary),
-                        onPressed: () => ref.read(productsProvider.notifier).searchProducts(''),
-                      )
-                    : null,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            child: GestureDetector(
+              onTap: () => context.push('/search'),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.borderLight),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.search_rounded, color: AppColors.textSecondary),
+                    const SizedBox(width: 10),
+                    Text(
+                      "Search for groceries...",
+                      style: GoogleFonts.outfit(color: AppColors.textSecondary, fontSize: 14),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                ref.invalidate(categoriesProvider);
-                await ref.read(productsProvider.notifier).fetchProducts();
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+            child: homeAsync.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => _ErrorView(onRetry: () => ref.invalidate(homeProvider)),
+              data: (home) => RefreshIndicator(
+                onRefresh: () => ref.refresh(homeProvider.future),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.zero,
                   children: [
-                    // Promo banner
-                    Container(
-                      margin: const EdgeInsets.all(16),
-                      height: 140,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.primaryDark],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
-                        ],
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            right: -20,
-                            bottom: -20,
-                            child: Icon(Icons.shopping_basket_rounded, size: 160, color: AppColors.onPrimary.withOpacity(0.10)),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                  decoration: BoxDecoration(color: AppColors.onPrimary.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
-                                  child: Text("FRESH & AFFORDABLE", style: GoogleFonts.outfit(color: AppColors.onPrimary, fontSize: 10, fontWeight: FontWeight.bold)),
-                                ),
-                                const SizedBox(height: 8),
-                                Text("Click. Cart. Chill.", style: GoogleFonts.outfit(color: AppColors.onPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
-                                Text("Great prices, delivered to your door!", style: GoogleFonts.outfit(color: AppColors.onPrimary.withOpacity(0.8), fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    const SizedBox(height: 8),
+                    // Banners (or fallback promo banner when none configured)
+                    if (home.banners.isNotEmpty)
+                      BannerCarousel(banners: home.banners)
+                    else
+                      const _PromoBannerFallback(),
+                    const SizedBox(height: 20),
 
-                    // Category chips
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text("Categories", style: Theme.of(context).textTheme.titleMedium),
-                    ),
-                    const SizedBox(height: 12),
-                    categoriesAsync.when(
-                      loading: () => const SizedBox(height: 50, child: Center(child: CircularProgressIndicator())),
-                      error: (err, stack) => const SizedBox.shrink(),
-                      data: (list) => SizedBox(
-                        height: 55,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          itemCount: list.length,
-                          itemBuilder: (context, index) {
-                            final cat = list[index];
-                            final isSelected = productsState.selectedCategoryId == cat.id;
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: ChoiceChip(
-                                label: Text(cat.name, style: GoogleFonts.outfit(fontWeight: isSelected ? FontWeight.bold : FontWeight.normal, color: isSelected ? AppColors.onPrimary : AppColors.textPrimary)),
-                                selected: isSelected,
-                                onSelected: (val) => ref.read(productsProvider.notifier).selectCategory(cat.id),
-                                selectedColor: AppColors.primary,
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: isSelected ? AppColors.primary : AppColors.borderLight)),
-                                showCheckmark: false,
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Text("Products", style: Theme.of(context).textTheme.titleMedium),
-                    ),
-                    const SizedBox(height: 12),
-                    if (productsState.isLoading)
-                      const Center(child: Padding(padding: EdgeInsets.all(40.0), child: CircularProgressIndicator()))
-                    else if (productsState.products.isEmpty)
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(40.0),
+                    // Category rail
+                    if (home.categories.isNotEmpty) ...[
+                      const SectionHeader(title: "Shop by Category"),
+                      const SizedBox(height: 8),
+                      CategoryRail(categories: home.categories),
+                      const SizedBox(height: 20),
+                    ],
+
+                    // Deals
+                    if (home.deals.isNotEmpty) ...[
+                      const SectionHeader(title: "Big Savings 🔥"),
+                      const SizedBox(height: 8),
+                      ProductRail(products: home.deals),
+                      const SizedBox(height: 20),
+                    ],
+
+                    // Top selling
+                    if (home.bestsellers.isNotEmpty) ...[
+                      const SectionHeader(title: "Top Selling"),
+                      const SizedBox(height: 8),
+                      ProductRail(products: home.bestsellers),
+                      const SizedBox(height: 20),
+                    ],
+
+                    // Featured (admin-curated)
+                    if (home.featured.isNotEmpty) ...[
+                      const SectionHeader(title: "Featured"),
+                      const SizedBox(height: 8),
+                      ProductRail(products: home.featured),
+                      const SizedBox(height: 20),
+                    ],
+
+                    // Per-category carousels
+                    ...home.categorySections.map((section) => Padding(
+                          padding: const EdgeInsets.only(bottom: 20),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Icon(Icons.search_off_rounded, size: 60, color: AppColors.textLight),
-                              const SizedBox(height: 12),
-                              Text("No items found!", style: GoogleFonts.outfit(color: AppColors.textSecondary, fontSize: 16)),
+                              SectionHeader(
+                                title: section.category.name,
+                                onSeeAll: () => context.push(
+                                  '/category/${section.category.id}?name=${Uri.encodeComponent(section.category.name)}',
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              ProductRail(products: section.products),
                             ],
                           ),
-                        ),
-                      )
-                    else
-                      ProductGrid(products: productsState.products),
+                        )),
+
                     const SizedBox(height: 100),
                   ],
                 ),
@@ -223,7 +191,82 @@ class HomeTab extends ConsumerWidget {
   }
 }
 
-/// Reusable 2-column product grid used by Home and Category screens.
+/// Fallback gradient promo banner shown when no banners are configured in admin.
+class _PromoBannerFallback extends StatelessWidget {
+  const _PromoBannerFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      height: 150,
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColors.primary, AppColors.primaryDark],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(color: AppColors.primary.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
+        ],
+      ),
+      child: Stack(
+        children: [
+          Positioned(
+            right: -20,
+            bottom: -20,
+            child: Icon(Icons.shopping_basket_rounded, size: 160, color: AppColors.onPrimary.withOpacity(0.10)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(color: AppColors.onPrimary.withOpacity(0.15), borderRadius: BorderRadius.circular(8)),
+                  child: Text("FRESH & AFFORDABLE", style: GoogleFonts.outfit(color: AppColors.onPrimary, fontSize: 10, fontWeight: FontWeight.bold)),
+                ),
+                const SizedBox(height: 8),
+                Text("Click. Cart. Chill.", style: GoogleFonts.outfit(color: AppColors.onPrimary, fontSize: 20, fontWeight: FontWeight.bold)),
+                Text("Great prices, delivered to your door!", style: GoogleFonts.outfit(color: AppColors.onPrimary.withOpacity(0.8), fontSize: 12)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  final VoidCallback onRetry;
+  const _ErrorView({required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.wifi_off_rounded, size: 60, color: AppColors.textLight),
+          const SizedBox(height: 12),
+          Text("Couldn't load the store.", style: GoogleFonts.outfit(color: AppColors.textSecondary, fontSize: 16)),
+          const SizedBox(height: 12),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary),
+            onPressed: onRetry,
+            child: Text("Retry", style: GoogleFonts.outfit(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Reusable 2-column product grid used by Category and Search screens.
 class ProductGrid extends ConsumerWidget {
   final List products;
   const ProductGrid({super.key, required this.products});
@@ -290,34 +333,7 @@ class ProductGrid extends ConsumerWidget {
                         ],
                       ),
                       const SizedBox(height: 8),
-                      SizedBox(
-                        height: 36,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)), padding: EdgeInsets.zero),
-                          onPressed: product.isOutOfStock
-                              ? null
-                              : () async {
-                                  final ok = await ref.read(cartProvider.notifier).addToCart(product.id, 1);
-                                  if (ok && context.mounted) {
-                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                      content: Text("${product.name} added to cart!", style: GoogleFonts.outfit()),
-                                      duration: const Duration(seconds: 1),
-                                      backgroundColor: AppColors.textPrimary,
-                                    ));
-                                  }
-                                },
-                          child: product.isOutOfStock
-                              ? Text("Out of Stock", style: GoogleFonts.outfit(fontSize: 11))
-                              : Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Icon(Icons.add_shopping_cart_rounded, size: 14),
-                                    const SizedBox(width: 4),
-                                    Text("Add to Cart", style: GoogleFonts.outfit(fontSize: 11)),
-                                  ],
-                                ),
-                        ),
-                      ),
+                      CartQuantityControl(product: product, height: 36),
                     ],
                   ),
                 ),

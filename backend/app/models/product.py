@@ -31,6 +31,8 @@ class Product(Base):
     stock = Column(Integer, default=0, nullable=False)
     image_url = Column(String(500), nullable=True)
     is_available = Column(Boolean, default=True)
+    # Admin-curated flag that surfaces the product in the home "Featured" rail
+    is_featured = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     category = relationship("Category", back_populates="products")

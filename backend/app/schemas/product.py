@@ -30,6 +30,7 @@ class ProductBase(BaseModel):
     stock: int = Field(0, ge=0)
     image_url: Optional[str] = Field(None, max_length=500)
     is_available: bool = True
+    is_featured: bool = False
 
 class ProductCreate(ProductBase):
     category_id: int
@@ -44,6 +45,7 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = Field(None, ge=0)
     image_url: Optional[str] = Field(None, max_length=500)
     is_available: Optional[bool] = None
+    is_featured: Optional[bool] = None
 
 class ProductResponse(ProductBase):
     id: str

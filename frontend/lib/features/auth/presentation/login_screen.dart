@@ -151,7 +151,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     controller: _phoneController,
                     keyboardType: TextInputType.phone,
                     decoration: const InputDecoration(
-                      hintText: "Enter Phone Number (e.g. 03001234567)",
+                      hintText: "03001234567",
                       prefixIcon: Icon(Icons.phone_android_rounded, color: AppColors.primary),
                     ),
                     validator: (v) {

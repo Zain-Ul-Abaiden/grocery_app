@@ -15,6 +15,7 @@ type Product = {
   stock: number;
   image_url: string;
   is_available: boolean;
+  is_featured: boolean;
 };
 
 type Category = { id: number; name: string };
@@ -29,6 +30,7 @@ const EMPTY_FORM = {
   category_id: "",
   image_url: "",
   is_available: true,
+  is_featured: false,
 };
 
 export default function ProductsPage() {
@@ -81,6 +83,7 @@ export default function ProductsPage() {
       category_id: p.category_id.toString(),
       image_url: p.image_url ?? "",
       is_available: p.is_available,
+      is_featured: p.is_featured ?? false,
     });
     setShowForm(true);
   };
@@ -99,6 +102,7 @@ export default function ProductsPage() {
       category_id: parseInt(form.category_id),
       image_url: form.image_url || null,
       is_available: form.is_available,
+      is_featured: form.is_featured,
     };
     try {
       if (editingId) {
@@ -259,7 +263,7 @@ export default function ProductsPage() {
               placeholder="https://..."
             />
           </Field>
-          <label className="flex items-center gap-2 text-sm text-gray-700 md:col-span-2">
+          <label className="flex items-center gap-2 text-sm text-gray-700">
             <input
               type="checkbox"
               checked={form.is_available}
@@ -269,6 +273,17 @@ export default function ProductsPage() {
               className="w-4 h-4 accent-[#2F6B1A]"
             />
             Available for sale
+          </label>
+          <label className="flex items-center gap-2 text-sm text-gray-700">
+            <input
+              type="checkbox"
+              checked={form.is_featured}
+              onChange={(e) =>
+                setForm({ ...form, is_featured: e.target.checked })
+              }
+              className="w-4 h-4 accent-[#2F6B1A]"
+            />
+            Featured on home
           </label>
           <div className="md:col-span-2 flex justify-end mt-2">
             <button
@@ -318,7 +333,14 @@ export default function ProductsPage() {
                     )}
                   </td>
                   <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                    {p.name}
+                    <div className="flex items-center gap-2">
+                      {p.name}
+                      {p.is_featured && (
+                        <span className="px-2 py-0.5 rounded-full font-medium text-[10px] bg-amber-100 text-amber-800">
+                          Featured
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 text-sm text-gray-600">
                     {p.discount_price != null ? (

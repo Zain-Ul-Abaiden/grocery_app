@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.future import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from sqlalchemy import text, inspect
+
 from app.core.config import settings
 from app.api.router import api_router
 from app.database.connection import engine, Base, AsyncSessionLocal
@@ -85,6 +87,7 @@ async def seed_data(db: AsyncSession):
                 discount_price=2890.00,
                 unit="1x5 pouch",
                 stock=35,
+                is_featured=True,
                 image_url="https://images.unsplash.com/photo-1622484211148-7163a3cbf3ff"
             ),
             Product(
@@ -169,6 +172,7 @@ async def seed_data(db: AsyncSession):
                 discount_price=799.00,
                 unit="12 pieces",
                 stock=15,
+                is_featured=True,
                 image_url="https://images.unsplash.com/photo-1560684352-8497838a2229"
             ),
             Product(
@@ -219,12 +223,31 @@ async def seed_data(db: AsyncSession):
 
 
 
+async def ensure_schema(conn):
+    """
+    Lightweight idempotent migration for already-created databases (SQLite for
+    local dev, Postgres/Neon in production). `create_all` never ALTERs existing
+    tables, so columns added after the DB was first seeded are back-filled here.
+    """
+    def _columns(sync_conn):
+        return {col["name"] for col in inspect(sync_conn).get_columns("products")}
+
+    columns = await conn.run_sync(_columns)
+    if "is_featured" not in columns:
+        if conn.dialect.name == "sqlite":
+            ddl = "ALTER TABLE products ADD COLUMN is_featured BOOLEAN NOT NULL DEFAULT 0"
+        else:
+            ddl = "ALTER TABLE products ADD COLUMN IF NOT EXISTS is_featured BOOLEAN NOT NULL DEFAULT FALSE"
+        await conn.execute(text(ddl))
+
+
 @app.on_event("startup")
 async def startup_event():
     # Automatically generate tables on start (essential for easy SQLite local run)
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-        
+        await ensure_schema(conn)
+
     # Seed mock data
     async with AsyncSessionLocal() as session:
         await seed_data(session)

@@ -29,6 +29,7 @@ class ProductModel {
   final int stock;
   final String? imageUrl;
   final bool isAvailable;
+  final bool isFeatured;
 
   ProductModel({
     required this.id,
@@ -41,6 +42,7 @@ class ProductModel {
     required this.stock,
     this.imageUrl,
     required this.isAvailable,
+    this.isFeatured = false,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -55,6 +57,7 @@ class ProductModel {
       stock: json['stock'] as int,
       imageUrl: json['image_url'] as String?,
       isAvailable: json['is_available'] as bool? ?? true,
+      isFeatured: json['is_featured'] as bool? ?? false,
     );
   }
 

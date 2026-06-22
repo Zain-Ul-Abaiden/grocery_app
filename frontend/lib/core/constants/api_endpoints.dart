@@ -2,16 +2,16 @@ class ApiEndpoints {
   // ── Host configuration ────────────────────────────────────────────────
   // Set this to the PC's current local Wi-Fi IP so a physical phone on the
   // same network can reach the backend. Find it with `ipconfig` (IPv4 Address).
-  static const String _host = "192.168.1.12";
+  static const String _host = "192.168.1.33";
 
   // Base URL used by web / desktop running on the SAME machine as the backend.
   // localhost is the most reliable here (loopback — no firewall/network needed).
   static const String baseUrl = "http://localhost:8000/api/v1";
 
-  // Used by physical Android phones. With `adb reverse tcp:8000 tcp:8000` over
-  // USB, localhost on the phone tunnels to the PC's backend — works regardless
-  // of Wi-Fi (bypasses guest-network client isolation). For pure Wi-Fi testing
-  // instead, change this to "http://$_host:8000/api/v1".
+  // Used by physical Android phones. Tethered over USB with
+  // `adb reverse tcp:8000 tcp:8000`, localhost on the phone tunnels to the PC's
+  // backend (no firewall/Wi-Fi needed). For a standalone Wi-Fi APK instead, set
+  // this to "http://$_host:8000/api/v1" and add the firewall rule for TCP 8000.
   static const String emulatorBaseUrl = "http://localhost:8000/api/v1";
 
   // Auth endpoints
@@ -27,6 +27,7 @@ class ApiEndpoints {
   static const String categories = "/categories";
   static const String products = "/products";
   static const String banners = "/banners";
+  static const String home = "/home";
 
   // Cart endpoints
   static const String cart = "/cart";

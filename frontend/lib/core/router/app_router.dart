@@ -6,6 +6,7 @@ import 'package:grocery_app/features/auth/presentation/signup_screen.dart';
 import 'package:grocery_app/features/main/presentation/main_scaffold.dart';
 import 'package:grocery_app/features/products/presentation/product_detail_screen.dart';
 import 'package:grocery_app/features/products/presentation/categories_tab.dart';
+import 'package:grocery_app/features/products/presentation/search_screen.dart';
 import 'package:grocery_app/features/orders/presentation/checkout_screen.dart';
 import 'package:grocery_app/features/orders/presentation/order_status_screen.dart';
 import 'package:grocery_app/features/orders/presentation/my_orders_screen.dart';
@@ -23,6 +24,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: '/', builder: (context, state) => const MainScaffold()),
 
       // Pushed (full-screen) routes
+      GoRoute(path: '/search', builder: (context, state) => const SearchScreen()),
       GoRoute(
         path: '/product/:id',
         builder: (context, state) => ProductDetailScreen(productId: state.pathParameters['id']!),

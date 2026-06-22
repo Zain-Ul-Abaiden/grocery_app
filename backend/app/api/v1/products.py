@@ -79,7 +79,8 @@ async def create_product(
         unit=payload.unit.strip(),
         stock=payload.stock,
         image_url=payload.image_url,
-        is_available=payload.is_available
+        is_available=payload.is_available,
+        is_featured=payload.is_featured
     )
     
     db.add(product)

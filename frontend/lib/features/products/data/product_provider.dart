@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grocery_app/core/constants/api_endpoints.dart';
 import 'package:grocery_app/core/network/api_client.dart';
 import 'package:grocery_app/shared/models/product_model.dart';
+import 'package:grocery_app/shared/models/home_model.dart';
 
 // Provider to fetch categories
 final categoriesProvider = FutureProvider<List<CategoryModel>>((ref) async {
@@ -10,6 +11,27 @@ final categoriesProvider = FutureProvider<List<CategoryModel>>((ref) async {
   final response = await dio.get(ApiEndpoints.categories);
   final list = response.data as List<dynamic>;
   return list.map((e) => CategoryModel.fromJson(e as Map<String, dynamic>)).toList();
+});
+
+// Composed home feed (banners, categories, bestsellers, featured, deals, sections)
+final homeProvider = FutureProvider<HomeData>((ref) async {
+  final dio = ref.watch(apiClientProvider);
+  final response = await dio.get(ApiEndpoints.home);
+  return HomeData.fromJson(response.data as Map<String, dynamic>);
+});
+
+// Dedicated search results for the search screen. Kept separate from
+// `productsProvider` so search does not clobber the Categories tab state.
+final searchProvider = FutureProvider.family<List<ProductModel>, String>((ref, query) async {
+  final trimmed = query.trim();
+  if (trimmed.isEmpty) return <ProductModel>[];
+  final dio = ref.watch(apiClientProvider);
+  final response = await dio.get(
+    ApiEndpoints.products,
+    queryParameters: {'search': trimmed},
+  );
+  final list = response.data as List<dynamic>;
+  return list.map((e) => ProductModel.fromJson(e as Map<String, dynamic>)).toList();
 });
 
 class ProductsState {
