@@ -7,7 +7,7 @@ class ProductRail extends StatelessWidget {
   final List<ProductModel> products;
   final double height;
 
-  const ProductRail({super.key, required this.products, this.height = 250});
+  const ProductRail({super.key, required this.products, this.height = 264});
 
   @override
   Widget build(BuildContext context) {
